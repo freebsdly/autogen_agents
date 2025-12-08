@@ -1,0 +1,157 @@
+Enter your response: ---------- TextMessage (user) ----------
+
+---------- TextMessage (user) ----------
+###Spec确认###
+---------- ModelClientStreamingChunkEvent (WebDeveloper) ----------
+好的，收到您的需求。作为一名资深前端Web开发专家，我将严格遵循您的角色定位、任务指令和关键约束，为您构建一个高保真、可运行的前端原型。
+
+---
+
+## **项目概览与技术栈说明**
+本项目是一个**交互式数据看板原型**，采用 Vite + React 作为基础框架。为满足高度自定义的视觉风格和流畅的交互体验，UI 部分将完全使用 **Headless UI** 提供核心交互逻辑，并搭配 **Tailwind CSS** 进行原子化样式设计。数据可视化部分采用 **AntV G2Plot** 库，交互动效由 **Framer Motion** 驱动，确保界面响应迅速且富有表现力。
+
+## **安装与运行命令**
+```bash
+# 1. 创建Vite项目（若已创建可跳过）
+npm create vite@latest interactive-dashboard -- --template react
+cd interactive-dashboard
+
+# 2. 安装项目依赖
+npm install
+npm install -D tailwindcss postcss autoprefixer
+npm install @headlessui/react @heroicons/react framer-motion @antv/g2plot
+
+# 3. 初始化Tailwind CSS
+npx tailwindcss init -p
+
+# 4. 运行开发服务器
+npm run dev
+```
+
+## **文件结构**
+```
+src/
+├── App.jsx
+├── main.jsx
+├── index.css
+├── components/
+│   ├── CustomCard.jsx
+│   ├── StatsOverview.jsx
+│   ├── InteractiveChart.jsx
+│   └── FilterPanel.jsx
+├── data/
+│   └── mockData.js
+└── utils/
+    └── animations.js
+tailwind.config.js
+```
+
+---
+
+## **文件源码**
+
+### **`tailwind.config.js`**
+```javascript
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // 定义项目主色调，用于高度自定义设计
+        primary: {
+          50: '#eff6ff',
+          100: '#dbeafe',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+        },
+        secondary: {
+          500: '#8b5cf6',
+        }
+      },
+      animation: {
+        // 可被Framer Motion或Tailwind类引用的自定义动画
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      }
+    },
+  },
+  plugins: [],
+}
+```
+
+### **`src/index.css`**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 基础重置与自定义字体（可选） */
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+}
+```
+
+### **`src/main.jsx`**
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+```
+
+### **`src/data/mockData.js`**
+```javascript
+// 模拟销售数据，用于图表和概览组件
+export const salesData = [
+  { month: 'Jan', revenue: 4000, profit: 2400, orders: 240 },
+  { month: 'Feb', revenue: 3000, profit: 1398, orders: 221 },
+  { month: 'Mar', revenue: 9800, profit: 2000, orders: 229 },
+  { month: 'Apr', revenue: 3908, profit: 2780, orders: 200 },
+  { month: 'May', revenue: 4800, profit: 1890, orders: 218 },
+  { month: 'Jun', revenue: 3800, profit: 2390, orders: 250 },
+  { month: 'Jul', revenue: 4300, profit: 3490, orders: 210 },
+];
+
+// 模拟产品类别数据，用于饼图
+export const categoryData = [
+  { type: '电子产品', value: 27, color: '#3b82f6' },
+  { type: '服装', value: 25, color: '#8b5cf6' },
+  { type: '家居', value: 18, color: '#10b981' },
+  { type: '图书', value: 15, color: '#f59e0b' },
+  { type: '其他', value: 15, color: '#ef4444' },
+];
+```
+
+### **`src/utils/animations.js`**
+```javascript
+// 集中管理Framer Motion的动画变体，确保一致性
+export const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+};
+
+export const scaleOnTap = {
+  whileTap: { scale: 0.95 }
+};
+
+export const listItemAnimation = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 }
+};
+```
+
+### **`src/components/CustomCard.jsx`**

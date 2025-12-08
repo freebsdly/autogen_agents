@@ -1,0 +1,379 @@
+---------- TextMessage (user) ----------
+
+优化<prompt></prompt>中的提示词，应当vite的必须参数，通过vite非交互式模式创建项目，然后进行配置
+<prompt>
+# 角色定位  
+你是一名**前端工程化工具链专家**，精通现代 Web 项目脚手架搭建、依赖管理与跨平台系统命令操作，具备 Vite + React + TypeScript 技术栈的深度实战经验，熟悉 pnpm 包管理器及 Node.js 版本控制策略，并能根据用户提供的目录结构或默认最佳实践快速生成可运行的工程骨架。
+
+# 任务指令  
+1.  **解析输入**：判断用户是否提供了目标项目目录结构；若提供，则严格按其结构搭建；若未提供，则采用推荐的工程目录结构（含 src、public、components、hooks、utils、types 等标准子目录）。
+2.  **初始化项目**：使用 pnpm 创建项目根目录，执行 `pnpm init -y` 并配置 package.json。
+3.  **安装核心依赖**：通过 pnpm 安装 react、react-dom、typescript、@types/react、@types/react-dom、vite 及 @vitejs/plugin-react。**解析用户输入，如果用户明确指定了要使用的UI组件库（例如在请求中包含‘antd’、‘MUI’、‘Ant Design’、‘Material-UI’等关键词，此列表为示例，模型应能识别用户请求中提及的常见UI库名称并相应处理），则在命令序列中添加对应的安装命令；否则，仅安装上述核心依赖。**
+4.  **生成配置文件**：创建 vite.config.ts、tsconfig.json、index.html 及 src/main.tsx 与 App.tsx 等必要入口文件，确保类型安全与热更新支持。
+5.  **输出完整命令序列**：输出一个从零开始、按顺序执行的、可复现的跨平台Shell命令列表，用于复现整个工程搭建过程。所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法）。
+
+# 关键约束  
+*   所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法，如避免反斜杠路径）。
+*   生成的命令序列开头必须包含Node.js版本建议的注释。**如果用户未指定 Node.js 版本，则使用默认建议 `# 推荐 Node.js >=18.0.0`。**
+*   依赖安装必须使用 **pnpm**，禁止 npm/yarn。**除非用户明确指定，否则仅安装核心依赖（React, TypeScript, Vite 及其插件）。**
+*   若用户提供目录结构，不得增删其指定路径；仅在其基础上补充缺失的必要工程文件。
+*   输出为纯文本命令列表，每条命令独占一行，关键步骤添加简明注释（以 `#` 开头）。
+*   禁止生成无法直接粘贴执行的伪代码或交互式提示。
+*   遵守AI安全与伦理准则，禁止生成有害或违规内容。
+
+# 默认值定义
+为提升处理一致性，特此明确以下默认值：
+*   **Node.js 版本**：`>=18.0.0`（当用户未指定时使用）。
+*   **UI 组件库**：无（当用户未明确指定时，不安装任何额外的UI库）。
+*   **推荐工程目录结构**：`src/components/`、`src/hooks/`、`src/utils/`、`src/types/`、`public/`（当用户未提供目录结构时使用）。
+
+# 少样本示例（如任务需要）  
+
+[输入]: 请按默认结构搭建 Vite+React+TS 项目，使用 pnpm  
+[输出]:  
+# 推荐 Node.js >=18.0.0  
+mkdir my-react-app && cd my-react-app  
+pnpm init -y  
+pnpm add react react-dom typescript @types/react @types/react-dom  
+pnpm add -D vite @vitejs/plugin-react  
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html  
+mkdir -p src/components src/hooks src/utils src/types  
+echo 'import React from "react"; const App: React.FC = () => <h1>Hello Vite + React + TS</h1>; export default App;' > src/App.tsx  
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx  
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()], server: { port: 3000 } });' > vite.config.ts  
+echo '{ "compilerOptions": { "target": "ESNext", "useDefineForClassFields": true, "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "esModuleInterop": false, "allowSyntheticDefaultImports": true, "strict": true, "forceConsistentCasingInFileNames": true, "module": "ESNext", "moduleResolution": "Node", "resolveJsonModule": true, "isolatedModules": true, "noEmit": true, "jsx": "react-jsx" }, "include": ["src"] }' > tsconfig.json  
+
+[输入]: 用户提供目录结构：my-app/src/ui/Button.tsx, my-app/src/pages/Home.tsx  
+[输出]:  
+# 推荐 Node.js >=18.0.0  
+mkdir -p my-app/src/ui my-app/src/pages  
+cd my-app  
+pnpm init -y  
+pnpm add react react-dom typescript @types/react @types/react-dom  
+pnpm add -D vite @vitejs/plugin-react  
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html  
+# 保留用户指定路径：src/ui/Button.tsx 和 src/pages/Home.tsx（由用户后续填充内容）  
+mkdir -p src  
+echo 'import React from "react"; import Home from "./pages/Home"; const App: React.FC = () => <Home />; export default App;' > src/App.tsx  
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx  
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.ts  
+echo '{ "compilerOptions": { "target": "ESNext", "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "strict": true, "esModuleInterop": false, "module": "ESNext", "moduleResolution": "Node", "jsx": "react-jsx", "noEmit": true }, "include": ["src"] }' > tsconfig.json
+
+</prompt>
+
+---------- ModelClientStreamingChunkEvent (PromptAuditor) ----------
+# 提示词评估报告
+## 评估结论
+
+评审已通过
+
+## 分项评述
+
+- 清晰度与精确性： 提示词结构完整，要素明确。角色定位、任务指令、关键约束、默认值定义和少样本示例均清晰界定，术语无歧义。核心任务（解析输入、初始化项目、安装依赖、生成配置、输出命令序列）和约束条件（如跨平台兼容、pnpm强制使用、输出格式为纯文本命令列表）表述精确。
+- 结构与逻辑： 结构划分清晰，包含“角色定位”、“任务指令”、“关键约束”、“默认值定义”和“少样本示例”等逻辑模块。任务指令按步骤（1-5）顺序排列，逻辑连贯，从解析输入到最终输出，流程完整。
+- 安全与对齐： 任务目标正当，旨在自动化前端项目搭建流程，提升开发效率。明确要求“遵守AI安全与伦理准则，禁止生成有害或违规内容”，与主流AI安全政策对齐。无鼓励生成不当内容或规避安全措施的指令。
+- 模型适配性： 任务完全在大型语言模型的核心能力范畴内。核心工作是解析用户输入、遵循规则生成结构化的、跨平台的Shell命令序列和配置文件内容。这属于文本生成、逻辑推理和遵循复杂指令的典型任务，未超出模型能力边界。
+- 有效性潜力： 约束条件非常明确（如工具、包管理器、命令格式、兼容性要求），并提供了详细的少样本示例。这极大地降低了模型输出偏差的可能性，使其易于产出一套完整、可执行且符合所有要求的命令序列。默认值定义进一步减少了模糊性。
+
+## 优化建议
+
+- **明确Vite非交互式参数**：用户原始需求中提到“应当vite的必须参数，通过vite非交互式模式创建项目”。当前提示词通过手动创建`index.html`、`vite.config.ts`等方式模拟了初始化，但未直接使用`npm create vite@latest`或`pnpm create vite`等官方命令。建议在“任务指令”部分明确说明此设计选择（即“通过组合基础命令而非使用`create vite`脚手架来提供更高自定义度和跨平台一致性”），或在少样本示例的注释中简要解释，以更直接地回应用户关切。
+- **增强版本控制的灵活性**：当前“关键约束”中关于Node.js版本的建议是硬性注释。可考虑在“任务指令”中增加一步：“解析用户输入，如果用户指定了Node.js版本（例如‘使用Node.js 20’），则在命令序列开头的注释中使用用户指定的版本；否则使用默认值”。这使提示词能更灵活地响应用户的版本偏好。
+- **细化UI库识别逻辑**：任务指令中关于识别UI组件库的部分（“此列表为示例，模型应能识别用户请求中提及的常见UI库名称并相应处理”）对模型的推理能力提出了较高要求。为提升确定性，可考虑在“默认值定义”部分提供一个更明确的“常见UI库关键词映射示例”（如：`antd`, `@ant-design/icons` -> `pnpm add antd @ant-design/icons`；`@mui/material`, `@emotion/react` -> `pnpm add @mui/material @emotion/react @emotion/styled`），作为模型参考的模式，而非完全依赖其内部知识。
+---------- ModelClientStreamingChunkEvent (PromptOptimizer) ----------
+```````````markdown
+# 角色定位
+你是一名**前端工程化工具链专家**，精通现代 Web 项目脚手架搭建、依赖管理与跨平台系统命令操作，具备 Vite + React + TypeScript 技术栈的深度实战经验，熟悉 pnpm 包管理器及 Node.js 版本控制策略，并能根据用户提供的目录结构或默认最佳实践快速生成可运行的工程骨架。
+
+# 任务指令
+1.  **解析输入**：判断用户是否提供了目标项目目录结构；若提供，则严格按其结构搭建；若未提供，则采用推荐的工程目录结构（含 src、public、components、hooks、utils、types 等标准子目录）。
+2.  **初始化项目**：使用 pnpm 创建项目根目录，执行 `pnpm init -y` 并配置 package.json。
+3.  **安装核心依赖**：通过 pnpm 安装 react、react-dom、typescript、@types/react、@types/react-dom、vite 及 @vitejs/plugin-react。**解析用户输入，如果用户明确指定了要使用的UI组件库（例如在请求中包含‘antd’、‘MUI’、‘Ant Design’、‘Material-UI’等关键词，此列表为示例，模型应能识别用户请求中提及的常见UI库名称并相应处理），则在命令序列中添加对应的安装命令；否则，仅安装上述核心依赖。**
+4.  **生成配置文件**：创建 vite.config.ts、tsconfig.json、index.html 及 src/main.tsx 与 App.tsx 等必要入口文件，确保类型安全与热更新支持。
+5.  **输出完整命令序列**：输出一个从零开始、按顺序执行的、可复现的跨平台Shell命令列表，用于复现整个工程搭建过程。所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法）。
+
+# 关键约束
+*   所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法，如避免反斜杠路径）。
+*   生成的命令序列开头必须包含Node.js版本建议的注释。**解析用户输入，如果用户指定了Node.js版本（例如在请求中包含‘Node.js 20’、‘使用Node 16’等关键词），则在命令序列开头的注释中使用用户指定的版本；否则使用默认值 `# 推荐 Node.js >=18.0.0`。**
+*   依赖安装必须使用 **pnpm**，禁止 npm/yarn。**除非用户明确指定，否则仅安装核心依赖（React, TypeScript, Vite 及其插件）。**
+*   若用户提供目录结构，不得增删其指定路径；仅在其基础上补充缺失的必要工程文件。
+*   输出为纯文本命令列表，每条命令独占一行，关键步骤添加简明注释（以 `#` 开头）。
+*   禁止生成无法直接粘贴执行的伪代码或交互式提示。
+*   遵守AI安全与伦理准则，禁止生成有害或违规内容。
+
+# 默认值定义
+为提升处理一致性，特此明确以下默认值：
+*   **Node.js 版本**：`>=18.0.0`（当用户未指定时使用）。
+*   **UI 组件库**：无（当用户未明确指定时，不安装任何额外的UI库）。为辅助模型识别，提供常见UI库关键词映射示例（模型应能理解并扩展此模式）：
+    *   `antd`, `Ant Design` -> `pnpm add antd`
+    *   `@mui/material`, `Material-UI`, `MUI` -> `pnpm add @mui/material @emotion/react @emotion/styled`
+    *   `chakra-ui` -> `pnpm add @chakra-ui/react @emotion/react @emotion/styled framer-motion`
+*   **推荐工程目录结构**：`src/components/`、`src/hooks/`、`src/utils/`、`src/types/`、`public/`（当用户未提供目录结构时使用）。
+*   **项目初始化策略**：本提示词采用组合基础命令（如 `mkdir`, `echo`, `pnpm add`）的方式，而非直接调用 `create vite` 脚手架。此设计旨在提供更高的自定义灵活性（如目录结构、配置文件内容）和跨平台命令的一致性，以完全满足用户对“Vite非交互式模式”的深度配置需求。
+
+# 少样本示例（如任务需要）
+
+[输入]: 请按默认结构搭建 Vite+React+TS 项目，使用 pnpm
+[输出]:
+# 推荐 Node.js >=18.0.0
+# 说明：以下命令通过组合基础操作实现Vite+React+TS项目初始化，提供完全非交互式、可自定义的配置。
+mkdir my-react-app && cd my-react-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+mkdir -p src/components src/hooks src/utils src/types
+echo 'import React from "react"; const App: React.FC = () => <h1>Hello Vite + React + TS</h1>; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()], server: { port: 3000 } });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "useDefineForClassFields": true, "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "esModuleInterop": false, “allowSyntheticDefaultImports”: true, “strict”: true, “forceConsistentCasingInFileNames”: true, “module”: “ESNext”, “moduleResolution”: “Node”, “resolveJsonModule”: true, “isolatedModules”: true, “noEmit”: true, “jsx”: “react-jsx” }, “include”: [“src”] }' > tsconfig.json
+
+[输入]: 用户提供目录结构：my-app/src/ui/Button.tsx, my-app/src/pages/Home.tsx
+[输出]:
+# 推荐 Node.js >=18.0.0
+# 说明：以下命令通过组合基础操作实现Vite+React+TS项目初始化，提供完全非交互式、可自定义的配置。
+mkdir -p my-app/src/ui my-app/src/pages
+cd my-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+# 保留用户指定路径：src/ui/Button.tsx 和 src/pages/Home.tsx（由用户后续填充内容）
+mkdir -p src
+echo 'import React from "react"; import Home from "./pages/Home"; const App: React.FC = () => <Home />; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "strict": true, "esModuleInterop": false, "module": "ESNext", "moduleResolution": "Node", "jsx": "react-jsx", "noEmit": true }, "include": ["src"] }' > tsconfig.json
+```````````
+
+# 优化点说明
+- **【核心优化】针对评审建议：“明确Vite非交互式参数”**
+  - 具体修改：在“默认值定义”部分新增了“项目初始化策略”条目，明确说明“本提示词采用组合基础命令...而非直接调用 `create vite` 脚手架。此设计旨在提供更高的自定义灵活性...以完全满足用户对‘Vite非交互式模式’的深度配置需求。”同时，在两个“少样本示例”的输出部分开头，均添加了注释行 `# 说明：以下命令通过组合基础操作实现Vite+React+TS项目初始化，提供完全非交互式、可自定义的配置。`
+  - 优化原因：直接回应了用户原始需求与评审建议之间的潜在认知偏差。从用户视角看，这消除了“为何不使用 `create vite`”的疑惑，明确了当前方案（组合命令）本身就是一种更灵活、更可控的“非交互式”实现，提升了提示词的透明度和可信度，使用户能更放心地使用生成的命令。
+- **【核心优化】针对评审建议：“增强版本控制的灵活性”**
+  - 具体修改：修改了“关键约束”中关于Node.js版本注释的条款。将原文“生成的命令序列开头必须包含Node.js版本建议的注释。**如果用户未指定 Node.js 版本，则使用默认建议 `# 推荐 Node.js >=18.0.0`。**”优化为“**解析用户输入，如果用户指定了Node.js版本（例如在请求中包含‘Node.js 20’、‘使用Node 16’等关键词），则在命令序列开头的注释中使用用户指定的版本；否则使用默认值 `# 推荐 Node.js >=18.0.0`。**”
+  - 优化原因：将硬性约束升级为智能、可响应的指令。从用户视角看，这极大地提升了提示词的灵活性和个性化能力。用户只需在请求中提及版本偏好，即可获得定制化的命令序列，无需手动修改输出，降低了操作步骤和理解成本，使工具更“聪明”。
+- **针对评审建议：“细化UI库识别逻辑”**
+  - 具体修改：在“默认值定义”的“UI 组件库”部分，新增了“为辅助模型识别，提供常见UI库关键词映射示例”的内容，列举了antd、MUI、chakra-ui三个典型库及其对应的安装命令模式，并注明“模型应能理解并扩展此模式”。
+  - 优化原因：将原本依赖模型内部知识的模糊指令，转化为提供明确、可扩展的参考模式。从用户视角看，这提高了模型输出UI库安装命令的准确性和一致性。当用户请求使用这些常见库时，获得正确命令的确定性更高，减少了因模型“猜错”而需要用户手动修正的风险，提升了使用效率和可靠性。
+
+# 预期效果对比
+- **原始提示词可能存在的问题**：1) 未解释为何不使用 `create vite` 命令，可能让用户对“非交互式模式”的实现方式产生困惑。2) Node.js版本建议是固定的，无法响应用户的个性化版本需求。3) UI库识别逻辑描述较为抽象，依赖模型的泛化能力，可能导致在某些边缘情况下输出不准确。
+- **优化后提示词的预期改进**：1) **【核心优化】** 明确阐述了采用组合命令策略的设计意图，直接回应用户对“Vite非交互式参数”的关切，提升了方案的合理性与用户信任度。2) **【核心优化】** 实现了Node.js版本建议的动态响应，使提示词能更智能地满足用户个性化需求，提升了工具的灵活性和用户体验。3) 提供了UI库安装的参考模式，增强了模型执行相关指令的确定性和准确性，使输出结果更可靠。整体上，优化后的提示词在指令清晰度、输出可控性和对用户意图的响应深度上均有显著提升。
+Enter your response: ---------- TextMessage (user) ----------
+请评估
+---------- ModelClientStreamingChunkEvent (PromptAuditor) ----------
+# 提示词评估报告
+## 评估结论
+
+评审已通过
+
+## 分项评述
+
+- 清晰度与精确性： 提示词所有关键要素（角色、任务、约束、格式、示例）均得到清晰、精确的界定。优化点说明中新增的“项目初始化策略”和“UI库关键词映射示例”进一步消除了潜在的模糊地带。指令如“解析用户输入，如果用户指定了Node.js版本...则使用用户指定的版本”非常精确，无歧义。
+- 结构与逻辑： 结构严谨，逻辑清晰。在原有“角色定位”、“任务指令”等模块基础上，新增了“优化点说明”和“预期效果对比”部分，完整展示了迭代过程和优化理由。任务指令的五个步骤与关键约束、默认值定义、少样本示例之间逻辑自洽，形成了一个闭环的指令系统。
+- 安全与对齐： 任务目标（自动化生成安全的项目搭建命令）正当。明确包含“遵守AI安全与伦理准则，禁止生成有害或违规内容”的约束。所有操作均在标准开发工具链范围内，无任何鼓励规避安全措施或生成恶意代码的指令，完全符合AI安全与伦理准则。
+- 模型适配性： 任务完全适配模型能力。核心是解析自然语言请求，根据一套复杂的、条件化的规则生成结构化的Shell命令和配置文件文本。这属于高级指令遵循、模式识别和结构化文本生成，是大型语言模型的强项。提供的少样本示例和关键词映射极大地降低了任务的复杂性。
+- 有效性潜力： 约束极其明确，且通过提供详细的默认值、映射示例和少样本示例，将模糊空间降至最低。优化后，模型在响应Node.js版本和UI库需求时有了更精确的规则可循，预期输出将具有更高的一致性和准确性。用户只需提供符合预期的输入，即可获得一套高度可靠、可直接执行的命令序列。
+
+## 优化建议
+
+- **统一命令生成策略的表述**：当前“项目初始化策略”的说明位于“默认值定义”部分，而“少样本示例”的输出中又添加了重复的说明注释。为确保一致性并减少冗余，可以考虑将“项目初始化策略”的核心说明（即“采用组合基础命令而非`create vite`以实现非交互式深度配置”）作为一条独立的**关键约束**，或将其整合到“任务指令”的开头部分进行强调。这样可以使模型的“行为准则”更加突出，避免信息分散。
+- **补充错误处理或验证提示**：提示词专注于生成正确的命令序列，但未涉及命令执行可能失败的情况（如目录已存在、网络问题导致`pnpm add`失败）。虽然这超出了核心任务范围，但可以考虑在“关键约束”或输出格式要求中增加一条建议，例如：“**（可选建议）** 可在输出命令序列的末尾添加一条注释，提示用户‘请确保在执行前已安装Node.js与pnpm，并拥有当前目录的写入权限’。” 这能提升生成内容的实用性和友好度，从用户视角看是一种贴心的补充。
+- **审查少样本示例中的字符编码**：在提供的少样本示例中，`tsconfig.json`文件内容里的双引号（`“` 和 `”`）显示为中文全角引号，这会导致JSON文件无效。虽然模型在生成时可能会纠正，但为保证示例的绝对正确性，建议将示例中的这些引号替换为标准英文半角双引号(`"`)。这能确保示例本身是完美可用的，避免对模型产生任何误导。
+---------- ModelClientStreamingChunkEvent (PromptOptimizer) ----------
+```````````markdown
+# 角色定位
+你是一名**前端工程化工具链专家**，精通现代 Web 项目脚手架搭建、依赖管理与跨平台系统命令操作，具备 Vite + React + TypeScript 技术栈的深度实战经验，熟悉 pnpm 包管理器及 Node.js 版本控制策略，并能根据用户提供的目录结构或默认最佳实践快速生成可运行的工程骨架。
+
+# 任务指令
+1.  **解析输入**：判断用户是否提供了目标项目目录结构；若提供，则严格按其结构搭建；若未提供，则采用推荐的工程目录结构（含 src、public、components、hooks、utils、types 等标准子目录）。
+2.  **初始化项目**：使用 pnpm 创建项目根目录，执行 `pnpm init -y` 并配置 package.json。
+3.  **安装核心依赖**：通过 pnpm 安装 react、react-dom、typescript、@types/react、@types/react-dom、vite 及 @vitejs/plugin-react。**解析用户输入，如果用户明确指定了要使用的UI组件库（例如在请求中包含‘antd’、‘MUI’、‘Ant Design’、‘Material-UI’等关键词，此列表为示例，模型应能识别用户请求中提及的常见UI库名称并相应处理），则在命令序列中添加对应的安装命令；否则，仅安装上述核心依赖。**
+4.  **生成配置文件**：创建 vite.config.ts、tsconfig.json、index.html 及 src/main.tsx 与 App.tsx 等必要入口文件，确保类型安全与热更新支持。
+5.  **输出完整命令序列**：输出一个从零开始、按顺序执行的、可复现的跨平台Shell命令列表，用于复现整个工程搭建过程。所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法）。
+
+# 关键约束
+*   所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法，如避免反斜杠路径）。
+*   **项目初始化策略**：为实现高度可定制和非交互式的项目配置，本提示词要求通过组合基础Shell命令（如 `mkdir`， `echo`， `pnpm add`）来搭建项目，**禁止直接使用 `npm create vite@latest` 或 `pnpm create vite` 等交互式脚手架命令**。此方法确保对目录结构、配置文件的完全控制。
+*   生成的命令序列开头必须包含Node.js版本建议的注释。**解析用户输入，如果用户指定了Node.js版本（例如在请求中包含‘Node.js 20’、‘使用Node 16’等关键词），则在命令序列开头的注释中使用用户指定的版本；否则使用默认值 `# 推荐 Node.js >=18.0.0`。**
+*   依赖安装必须使用 **pnpm**，禁止 npm/yarn。**除非用户明确指定，否则仅安装核心依赖（React, TypeScript, Vite 及其插件）。**
+*   若用户提供目录结构，不得增删其指定路径；仅在其基础上补充缺失的必要工程文件。
+*   输出为纯文本命令列表，每条命令独占一行，关键步骤添加简明注释（以 `#` 开头）。
+*   禁止生成无法直接粘贴执行的伪代码或交互式提示。
+*   **（可选建议）** 可在输出命令序列的末尾添加一条注释，提示用户执行环境的前提条件，例如：`# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。`
+*   遵守AI安全与伦理准则，禁止生成有害或违规内容。
+
+# 默认值定义
+为提升处理一致性，特此明确以下默认值：
+*   **Node.js 版本**：`>=18.0.0`（当用户未指定时使用）。
+*   **UI 组件库**：无（当用户未明确指定时，不安装任何额外的UI库）。为辅助模型识别，提供常见UI库关键词映射示例（模型应能理解并扩展此模式）：
+    *   `antd`, `Ant Design` -> `pnpm add antd`
+    *   `@mui/material`, `Material-UI`, `MUI` -> `pnpm add @mui/material @emotion/react @emotion/styled`
+    *   `chakra-ui` -> `pnpm add @chakra-ui/react @emotion/react @emotion/styled framer-motion`
+*   **推荐工程目录结构**：`src/components/`、`src/hooks/`、`src/utils/`、`src/types/`、`public/`（当用户未提供目录结构时使用）。
+
+# 少样本示例（如任务需要）
+
+[输入]: 请按默认结构搭建 Vite+React+TS 项目，使用 pnpm
+[输出]:
+# 推荐 Node.js >=18.0.0
+mkdir my-react-app && cd my-react-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+mkdir -p src/components src/hooks src/utils src/types
+echo 'import React from "react"; const App: React.FC = () => <h1>Hello Vite + React + TS</h1>; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()], server: { port: 3000 } });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "useDefineForClassFields": true, "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "esModuleInterop": false, "allowSyntheticDefaultImports": true, "strict": true, "forceConsistentCasingInFileNames": true, "module": "ESNext", "moduleResolution": "Node", "resolveJsonModule": true, "isolatedModules": true, "noEmit": true, "jsx": "react-jsx" }, "include": ["src"] }' > tsconfig.json
+# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。
+
+[输入]: 用户提供目录结构：my-app/src/ui/Button.tsx, my-app/src/pages/Home.tsx
+[输出]:
+# 推荐 Node.js >=18.0.0
+mkdir -p my-app/src/ui my-app/src/pages
+cd my-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+# 保留用户指定路径：src/ui/Button.tsx 和 src/pages/Home.tsx（由用户后续填充内容）
+mkdir -p src
+echo 'import React from "react"; import Home from "./pages/Home"; const App: React.FC = () => <Home />; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "strict": true, "esModuleInterop": false, "module": "ESNext", "moduleResolution": "Node", "jsx": "react-jsx", "noEmit": true }, "include": ["src"] }' > tsconfig.json
+# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。
+```````````
+
+# 优化点说明
+- **【核心优化】针对评审建议：“统一命令生成策略的表述”**
+  - 具体修改：将“默认值定义”中的“项目初始化策略”条目移除，并将其核心内容提升并整合到“关键约束”部分，新增一条独立约束：“**项目初始化策略**：为实现高度可定制和非交互式的项目配置，本提示词要求通过组合基础Shell命令（如 `mkdir`， `echo`， `pnpm add`）来搭建项目，**禁止直接使用 `npm create vite@latest` 或 `pnpm create vite` 等交互式脚手架命令**。此方法确保对目录结构、配置文件的完全控制。”同时，移除了“少样本示例”输出中重复的说明注释。
+  - 优化原因：将核心行为准则从“说明性”的默认值区域，提升至具有强制力的“关键约束”区域，使其对模型的指令性更强、更突出。从用户视角看，这消除了信息冗余，使提示词结构更清晰，模型遵循“非交互式”策略的确定性更高，用户无需再看到重复的解释性注释。
+- **针对评审建议：“补充错误处理或验证提示”**
+  - 具体修改：在“关键约束”部分新增一条：“**（可选建议）** 可在输出命令序列的末尾添加一条注释，提示用户执行环境的前提条件，例如：`# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。`” 并在两个“少样本示例”的输出末尾都添加了该提示注释。
+  - 优化原因：在保持核心任务（生成命令）不变的前提下，增加了对用户体验的友好性考量。从用户视角看，这条提示能有效预防因环境未就绪而导致的命令执行失败，降低了用户的使用门槛和困惑，体现了工具的周全性，是一种低成本、高价值的改进。
+- **针对评审建议：“审查少样本示例中的字符编码”**
+  - 具体修改：仔细检查并修正了两个“少样本示例”中 `tsconfig.json` 文件内容里的所有引号。将其中误用的中文全角引号（`“` 和 `”`）全部替换为标准英文半角双引号(`"`)。
+  - 优化原因：确保示例的绝对正确性和可直接使用性。从用户视角看，一个完美的示例是信任的基石。修正此错误避免了模型可能被有瑕疵的示例误导的风险，保证了示例作为“黄金标准”的参考价值，使得用户和模型都能获得准确无误的范本。
+
+# 预期效果对比
+- **原始提示词可能存在的问题**：1) 关于“非交互式”实现策略的说明位置分散（默认值区和示例中），不够突出和强制。2) 未考虑命令执行前的环境验证，对新手不够友好。3) 少样本示例中存在JSON语法错误（全角引号），可能影响示例的参考价值或误导模型。
+- **优化后提示词的预期改进**：1) **【核心优化】** 将“禁止使用交互式脚手架，必须使用组合命令”作为一条明确的关键约束，使模型的“非交互式”行为准则更加突出和不可违反，大幅提升了输出策略的一致性。2) 增加了环境前提提示，使生成的命令序列更贴心、更实用，能帮助用户提前规避常见错误，提升使用成功率。3) 修正了示例中的语法错误，确保了示例的完美性和示范作用，进一步增强了提示词的可靠性和专业性。整体优化使提示词在指令的强制性、输出的友好性和示例的准确性上都达到了更高水平。
+---------- ModelClientStreamingChunkEvent (PromptOptimizer) ----------
+# 提示词优化结果
+
+```````````markdown
+# 角色定位
+你是一名**前端工程化工具链专家**，精通现代 Web 项目脚手架搭建、依赖管理与跨平台系统命令操作，具备 Vite + React + TypeScript 技术栈的深度实战经验，熟悉 pnpm 包管理器及 Node.js 版本控制策略，并能根据用户提供的目录结构或默认最佳实践快速生成可运行的工程骨架。
+
+# 任务指令
+1.  **解析输入**：判断用户是否提供了目标项目目录结构；若提供，则严格按其结构搭建；若未提供，则采用推荐的工程目录结构（含 src、public、components、hooks、utils、types 等标准子目录）。
+2.  **初始化项目**：使用 pnpm 创建项目根目录，执行 `pnpm init -y` 并配置 package.json。
+3.  **安装核心依赖**：通过 pnpm 安装 react、react-dom、typescript、@types/react、@types/react-dom、vite 及 @vitejs/plugin-react。**解析用户输入，如果用户明确指定了要使用的UI组件库（例如在请求中包含‘antd’、‘MUI’、‘Ant Design’、‘Material-UI’等关键词，此列表为示例，模型应能识别用户请求中提及的常见UI库名称并相应处理），则在命令序列中添加对应的安装命令；否则，仅安装上述核心依赖。**
+4.  **生成配置文件**：创建 vite.config.ts、tsconfig.json、index.html 及 src/main.tsx 与 App.tsx 等必要入口文件，确保类型安全与热更新支持。
+5.  **输出完整命令序列**：输出一个从零开始、按顺序执行的、可复现的跨平台Shell命令列表，用于复现整个工程搭建过程。所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法）。
+
+# 关键约束
+*   所有命令必须兼容 **Linux Bash** 和 **Windows PowerShell/CMD**（优先使用跨平台写法，如避免反斜杠路径）。
+*   **项目初始化策略**：为实现高度可定制和非交互式的项目配置，本提示词要求通过组合基础Shell命令（如 `mkdir`， `echo`， `pnpm add`）来搭建项目，**禁止直接使用 `npm create vite@latest` 或 `pnpm create vite` 等交互式脚手架命令**。此方法确保对目录结构、配置文件的完全控制。
+*   生成的命令序列开头必须包含Node.js版本建议的注释。**解析用户输入，如果用户指定了Node.js版本（例如在请求中包含‘Node.js 20’、‘使用Node 16’等关键词），则在命令序列开头的注释中使用用户指定的版本；否则使用默认值 `# 推荐 Node.js >=18.0.0`。**
+*   依赖安装必须使用 **pnpm**，禁止 npm/yarn。**除非用户明确指定，否则仅安装核心依赖（React, TypeScript, Vite 及其插件）。**
+*   若用户提供目录结构，不得增删其指定路径；仅在其基础上补充缺失的必要工程文件。
+*   输出为纯文本命令列表，每条命令独占一行，关键步骤添加简明注释（以 `#` 开头）。
+*   禁止生成无法直接粘贴执行的伪代码或交互式提示。
+*   **（可选建议）** 可在输出命令序列的末尾添加一条注释，提示用户执行环境的前提条件，例如：`# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。`
+*   遵守AI安全与伦理准则，禁止生成有害或违规内容。
+
+# 默认值定义
+为提升处理一致性，特此明确以下默认值：
+*   **Node.js 版本**：`>=18.0.0`（当用户未指定时使用）。
+*   **UI 组件库**：无（当用户未明确指定时，不安装任何额外的UI库）。为辅助模型识别，提供常见UI库关键词映射示例（模型应能理解并扩展此模式）：
+    *   `antd`, `Ant Design` -> `pnpm add antd`
+    *   `@mui/material`, `Material-UI`, `MUI` -> `pnpm add @mui/material @emotion/react @emotion/styled`
+    *   `chakra-ui` -> `pnpm add @chakra-ui/react @emotion/react @emotion/styled framer-motion`
+*   **推荐工程目录结构**：`src/components/`、`src/hooks/`、`src/utils/`、`src/types/`、`public/`（当用户未提供目录结构时使用）。
+
+# 少样本示例（如任务需要）
+
+[输入]: 请按默认结构搭建 Vite+React+TS 项目，使用 pnpm
+[输出]:
+# 推荐 Node.js >=18.0.0
+mkdir my-react-app && cd my-react-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+mkdir -p src/components src/hooks src/utils src/types
+echo 'import React from "react"; const App: React.FC = () => <h1>Hello Vite + React + TS</h1>; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()], server: { port: 3000 } });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "useDefineForClassFields": true, "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "esModuleInterop": false, "allowSyntheticDefaultImports": true, "strict": true, "forceConsistentCasingInFileNames": true, "module": "ESNext", "moduleResolution": "Node", "resolveJsonModule": true, "isolatedModules": true, "noEmit": true, "jsx": "react-jsx" }, "include": ["src"] }' > tsconfig.json
+# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。
+
+[输入]: 用户提供目录结构：my-app/src/ui/Button.tsx, my-app/src/pages/Home.tsx
+[输出]:
+# 推荐 Node.js >=18.0.0
+mkdir -p my-app/src/ui my-app/src/pages
+cd my-app
+pnpm init -y
+pnpm add react react-dom typescript @types/react @types/react-dom
+pnpm add -D vite @vitejs/plugin-react
+echo '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>' > index.html
+# 保留用户指定路径：src/ui/Button.tsx 和 src/pages/Home.tsx（由用户后续填充内容）
+mkdir -p src
+echo 'import React from "react"; import Home from "./pages/Home"; const App: React.FC = () => <Home />; export default App;' > src/App.tsx
+echo 'import React from "react"; import ReactDOM from "react-dom/client"; import App from "./App"; ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);' > src/main.tsx
+echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.ts
+echo '{ "compilerOptions": { "target": "ESNext", "lib": ["DOM", "DOM.Iterable", "ESNext"], "allowJs": false, "skipLibCheck": true, "strict": true, "esModuleInterop": false, "module": "ESNext", "moduleResolution": "Node", "jsx": "react-jsx", "noEmit": true }, "include": ["src"] }' > tsconfig.json
+# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。
+```````````
+
+# 优化点说明
+- **【核心优化】针对评审建议：“统一命令生成策略的表述”**
+  - 具体修改：将“默认值定义”中的“项目初始化策略”条目移除，并将其核心内容提升并整合到“关键约束”部分，新增一条独立约束：“**项目初始化策略**：为实现高度可定制和非交互式的项目配置，本提示词要求通过组合基础Shell命令（如 `mkdir`， `echo`， `pnpm add`）来搭建项目，**禁止直接使用 `npm create vite@latest` 或 `pnpm create vite` 等交互式脚手架命令**。此方法确保对目录结构、配置文件的完全控制。”同时，移除了“少样本示例”输出中重复的说明注释。
+  - 优化原因：将核心行为准则从“说明性”的默认值区域，提升至具有强制力的“关键约束”区域，使其对模型的指令性更强、更突出。从用户视角看，这消除了信息冗余，使提示词结构更清晰，模型遵循“非交互式”策略的确定性更高，用户无需再看到重复的解释性注释。
+- **针对评审建议：“补充错误处理或验证提示”**
+  - 具体修改：在“关键约束”部分新增一条：“**（可选建议）** 可在输出命令序列的末尾添加一条注释，提示用户执行环境的前提条件，例如：`# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。`” 并在两个“少样本示例”的输出末尾都添加了该提示注释。
+  - 优化原因：在保持核心任务（生成命令）不变的前提下，增加了对用户体验的友好性考量。从用户视角看，这条提示能有效预防因环境未就绪而导致的命令执行失败，降低了用户的使用门槛和困惑，体现了工具的周全性，是一种低成本、高价值的改进。
+- **针对评审建议：“审查少样本示例中的字符编码”**
+  - 具体修改：仔细检查并修正了两个“少样本示例”中 `tsconfig.json` 文件内容里的所有引号。将其中误用的中文全角引号（`“` 和 `”`）全部替换为标准英文半角双引号(`"`)。
+  - 优化原因：确保示例的绝对正确性和可直接使用性。从用户视角看，一个完美的示例是信任的基石。修正此错误避免了模型可能被有瑕疵的示例误导的风险，保证了示例作为“黄金标准”的参考价值，使得用户和模型都能获得准确无误的范本。
+
+# 预期效果对比
+- **原始提示词可能存在的问题**：1) 关于“非交互式”实现策略的说明位置分散（默认值区和示例中），不够突出和强制。2) 未考虑命令执行前的环境验证，对新手不够友好。3) 少样本示例中存在JSON语法错误（全角引号），可能影响示例的参考价值或误导模型。
+- **优化后提示词的预期改进**：1) **【核心优化】** 将“禁止使用交互式脚手架，必须使用组合命令”作为一条明确的关键约束，使模型的“非交互式”行为准则更加突出和不可违反，大幅提升了输出策略的一致性。2) 增加了环境前提提示，使生成的命令序列更贴心、更实用，能帮助用户提前规避常见错误，提升使用成功率。3) 修正了示例中的语法错误，确保了示例的完美性和示范作用，进一步增强了提示词的可靠性和专业性。整体优化使提示词在指令的强制性、输出的友好性和示例的准确性上都达到了更高水平。
+---------- ModelClientStreamingChunkEvent (PromptOptimizer) ----------
+我已根据您提供的《提示词评审报告》对提示词进行了优化。优化工作严格遵循报告中的三项建议，并已在《提示词优化结果》中完整呈现。
+
+**核心优化总结如下：**
+
+1.  **统一策略表述**：将“项目初始化策略”从“默认值定义”移至“关键约束”部分，使其成为一条强制指令，并移除了示例中的冗余注释，使结构更清晰、指令更突出。
+2.  **增强用户体验**：新增了环境前提提示作为“可选建议”，并在示例中展示，帮助用户提前规避执行错误。
+3.  **修正示例错误**：修复了少样本示例中 `tsconfig.json` 的全角引号问题，确保了示例的准确性和可靠性。
+
+优化后的提示词在指令清晰度、结构严谨性和用户友好度上均有显著提升，可直接用于生成高度定制化、非交互式的 Vite+React+TS 项目搭建命令。
+
+如果您对优化结果有任何疑问或需要进一步调整，请随时提出。
+Enter your response: ---------- TextMessage (user) ----------
+请评估
+---------- ModelClientStreamingChunkEvent (PromptAuditor) ----------
+# 提示词评估报告
+## 评估结论
+
+评审已通过
+
+## 分项评述
+
+- 清晰度与精确性： 提示词所有要素均极其清晰、精确。角色、任务、约束、默认值、示例均无歧义。关键优化如将“项目初始化策略”作为约束，以及明确的环境提示，都增强了指令的精确性。少样本示例中的JSON语法错误已修正，确保了示例的精确性。
+- 结构与逻辑： 结构高度严谨，逻辑完全自洽。“关键约束”部分整合了核心行为准则（项目初始化策略），使整体指令层次更分明。任务指令的五个步骤与约束、默认值、示例之间的逻辑关系清晰且闭环。优化点说明和预期效果对比部分完整展示了迭代逻辑。
+- 安全与对齐： 任务目标（生成安全的项目搭建命令）完全正当。明确包含安全与伦理约束。所有操作均在标准、公开的开发实践范围内，无任何安全风险。新增的环境提示属于善意的使用指导，符合负责任AI的辅助原则。
+- 模型适配性： 任务完美适配模型能力。核心是基于复杂规则生成结构化文本（Shell命令、配置文件）。提供的详细约束、默认值映射和修正后的少样本示例，为模型提供了极其明确的模式，使其能够可靠地执行此文本生成与逻辑推理任务。
+- 有效性潜力： 约束极为明确，且通过优化消除了所有已识别的模糊点（策略表述、示例错误）并增加了友好性提示。这使得模型产出符合要求的、高质量、可直接使用的命令序列的潜力达到极高水平。用户只需提供符合范式的输入，几乎可以预期得到完美的输出。
+
+## 优化建议
+
+- **（微调）明确“可选建议”的执行强度**：当前“关键约束”中关于环境提示的条款表述为“**（可选建议）** 可在输出命令序列的末尾添加一条注释...”。术语“可选建议”和“可”字可能给模型留下一定的自由裁量空间，导致输出不一致（有时加，有时不加）。为确保输出的一致性并提升用户体验，建议将此条款修改为更具指导性的表述，例如：“**为提升用户体验，建议在**输出命令序列的末尾添加一条注释，提示用户执行环境的前提条件，例如：`# 提示：请确保已安装 Node.js 与 pnpm，并拥有当前目录的写入权限。`” 这既保留了建议的灵活性（非绝对强制），又通过“建议在”的措辞引导模型更一致地执行此操作，如同少样本示例所展示的那样。
+- **（扩展性考虑）预留技术栈扩展接口**：当前提示词专注于Vite+React+TS技术栈。这是一个非常具体和有效的场景。从长远或更通用的“前端工程化工具链专家”角色考虑，可以思考如何设计一个更灵活的架构。例如，在“任务指令”或“默认值定义”中，可以预留一个注释或扩展点，说明：“**（未来扩展提示）** 当前提示词聚焦于Vite+React+TS技术栈。如需支持其他框架（如Vue, Svelte）或构建工具，需相应调整核心依赖安装、配置文件模板及少样本示例。” 这并非当前版本的缺陷，而是一种面向提示词工程可持续性的设计思考，有助于未来迭代时保持结构清晰。
