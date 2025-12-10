@@ -16,6 +16,8 @@ from autogen_agentchat.conditions import TextMentionTermination
 # from autogen_ext.tools.mcp import McpWorkbench, StdioServerParams
 from autogen_ext.agents.web_surfer import MultimodalWebSurfer
 from autogen_ext.agents.file_surfer import FileSurfer
+from autogen_core.memory import ListMemory, MemoryContent, MemoryMimeType
+from autogen_core.model_context import BufferedChatCompletionContext
 
 try:
     # Add the parent directory to the path so we can import conf
@@ -26,7 +28,6 @@ except ImportError:
         "Failed to import settings from conf. Make sure conf is in the parent directory."
     )
     raise
-
 
 
 deepseek_model_info = ModelInfo(
@@ -87,6 +88,7 @@ doubao_thinking_model_client = OpenAIChatCompletionClient(
     base_url=settings.volces.base_url,
     model_info=volce_model_info,
 )
+
 
 # 产品经理
 prompt_generator_prompt = """
@@ -369,9 +371,8 @@ user = UserProxyAgent(
 
 # web浏览器
 web_surfer = MultimodalWebSurfer(
-        "WebSurfer",
-        model_client=doubao_model_client,
-    
+    "WebSurfer",
+    model_client=doubao_model_client,
 )
 
 # 文件浏览器
@@ -455,17 +456,28 @@ selector_prompt = """
 UserProxyAgent
 """
 
+model_context = BufferedChatCompletionContext(buffer_size=5)
+
 # 创建团队
 prompt_engneer_team = SelectorGroupChat(
-    participants=[prompt_generator, prompt_auditor, prompt_optimizer, user, web_surfer, file_surfer],
+    participants=[
+        prompt_generator,
+        prompt_auditor,
+        prompt_optimizer,
+        user,
+        web_surfer,
+        file_surfer,
+    ],
     model_client=deepseek_model_client,
     termination_condition=TextMentionTermination("good job"),
     selector_prompt=selector_prompt,
     max_turns=50,
-    allow_repeated_speaker=False
+    allow_repeated_speaker=False,
+    max_selector_attempts=2,
+    model_context=model_context,
 )
 
-task = """
+optimize_task = """
 评估优化<prompt></prompt>中的提示词
 <prompt>
 # 角色定位
@@ -519,9 +531,13 @@ task = """
 </prompt>
 """
 
+create_task = """
+生成"BDD行为驱动开发专家"提示词
+"""
+
 
 async def main() -> None:
-    await Console(prompt_engneer_team.run_stream(task=task))
+    await Console(prompt_engneer_team.run_stream(task=create_task))
 
 
 if __name__ == "__main__":

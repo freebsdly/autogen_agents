@@ -6,11 +6,20 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "autogen-agentchat>=0.7.5",
-    "autogen-ext[magentic-one,openai,ui,web-surfer]>=0.7.5",
+    "autogen-ext[magentic-one,openai,web-surfer]>=0.7.5",
+    "beautifulsoup4>=4.14.3",
     "dynaconf>=3.2.11",
     "gradio>=6.0.2",
+    "huggingface-hub[hf-xet]>=0.36.0",
     "ipykernel>=7.1.0",
+    "markdown>=3.10",
+    "nltk>=3.9.2",
     "playwright>=1.56.0",
+    "qdrant-client[fastembed]>=1.16.1",
+    "sentence-transformers>=5.1.2",
+    "torch>=2.9.1",
+    "transformers>=4.57.3",
+    "unstructured[markdown]>=0.18.21",
 ]
 
 [[tool.uv.index]]

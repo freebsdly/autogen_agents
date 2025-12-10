@@ -1,0 +1,30 @@
+# Rust文档向量化工具配置文件
+# 复制此文件为config.ini并根据需要修改参数
+
+[DEFAULT]
+# Qdrant服务器地址
+qdrant_url = http://localhost:6333
+
+# Embedding模型名称
+# 推荐模型：
+# - all-MiniLM-L6-v2 (轻量化，384维)
+# - BAAI/bge-small-en-v1.5 (英文优化，512维)
+# - BAAI/bge-base-en-v1.5 (英文优化，768维)
+embedding_model = BAAI/bge-small-en-v1.5
+
+# Qdrant集合名称
+collection_name = rust_docs_embeddings
+
+# 向量维度（需要与选择的模型匹配）
+# all-MiniLM-L6-v2: 384
+# BAAI/bge-small-en-v1.5: 512
+# BAAI/bge-base-en-v1.5: 768
+vector_size = 384
+
+# 文本块参数
+max_chunk_length = 1024    # 每个文本块的最大长度
+chunk_overlap = 100        # 相邻文本块的重叠长度
+min_chunk_size = 50        # 过滤掉过短的文本块
+
+# 批量处理参数
+batch_size = 100           # 向量插入的批次大小

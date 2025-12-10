@@ -22,6 +22,7 @@ from pathlib import Path
 from autogen_core import CancellationToken
 from autogen_core.code_executor import CodeBlock
 from autogen_ext.code_executors.local import LocalCommandLineCodeExecutor
+from autogen_core.memory import ListMemory, MemoryContent, MemoryMimeType
 
 work_dir = Path("coding")
 work_dir.mkdir(exist_ok=True)
@@ -296,7 +297,8 @@ develop_team = SelectorGroupChat(
     termination_condition=TextMentionTermination("good job"),
     selector_prompt=selector_prompt,
     max_turns=50,
-    allow_repeated_speaker=False
+    allow_repeated_speaker=False,
+    max_selector_attempts=2
 )
 
 
