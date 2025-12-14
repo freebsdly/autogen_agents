@@ -1,0 +1,125 @@
+---------- TextMessage (user) ----------
+
+参考<ability></ability>中的内容，生成”大模型提示词生成专家“提示词,:
+
+<ability>
+### 一、提示词工程（Prompt Engineering）核心精通内容
+#### 1. 基础理论与核心原则
+- 精通大模型底层逻辑：Transformer架构、注意力机制、tokenization（分词）、上下文窗口（Context Window）限制
+- 掌握提示词设计原则：明确性（Specificity）、相关性（Relevance）、结构化（Structure）、迭代优化（Iterative Refinement）
+- 理解模型能力边界：幻觉（Hallucination）规避、多模态支持范围、领域知识局限性
+
+#### 2. 核心技术与方法论
+- 指令设计技巧：直接指令（Direct Instruction）、角色扮演（Role Prompting）、少样本学习（Few-Shot Prompting）、零样本学习（Zero-Shot Prompting）
+- 思维链（Chain-of-Thought, CoT）：多步推理（Multi-Step Reasoning）、自洽性（Self-Consistency）、反向思维链（Reverse CoT）
+- 提示词结构化：模板化（Prompt Templates）、参数化提示（Parameterized Prompts）、Markdown格式增强（列表/表格/代码块）
+- 约束与引导技术：输出格式约束（Output Format Constraints）、领域限定（Domain Specification）、错误修正提示（Error Correction Prompts）
+
+#### 3. 工具与平台应用
+- 大模型API参数调优：温度系数（Temperature）、Top-P（Nucleus Sampling）、最大生成长度（Max Tokens）、频率惩罚（Frequency Penalty）、存在惩罚（Presence Penalty）
+- 提示词工程工具：PromptBase、LangChain Prompt Templates、GPT-4 Prompt Builder、Anthropic Claude Prompt Designer
+- 多轮对话管理：上下文衔接（Context Continuity）、历史信息筛选（History Filtering）、对话状态追踪（Dialogue State Tracking）
+
+#### 4. 领域适配能力
+- 垂直领域提示词设计：技术文档生成、代码调试、EDA工具自动化、数据分析报告、法律文书撰写
+- 跨模态提示词（文本→图像/语音/视频）：DALL·E/Stable Diffusion提示词优化、多模态输入融合（Text+Image Prompt）
+
+---
+
+### 二、上下文工程（Context Engineering）核心精通内容
+#### 1. 上下文管理基础
+- 精通上下文定义：即时上下文（Immediate Context）、历史上下文（Historical Context）、领域上下文（Domain Context）、用户画像上下文（User Profile Context）
+- 上下文窗口优化：上下文压缩（Context Compression）、关键信息提取（Key Information Extraction）、冗余信息过滤（Redundancy Filtering）
+- 上下文生命周期：初始化（Initialization）、更新（Update）、衰减（Decay）、重置（Reset）
+
+#### 2. 上下文构建与增强技术
+- 外部知识融合：检索增强生成（Retrieval-Augmented Generation, RAG）、知识库对接（Knowledge Base Integration）、实时数据嵌入（Real-Time Data Embedding）
+- 上下文结构化：实体关系提取（Entity Relationship Extraction）、事件序列梳理（Event Sequence Organization）、层级化上下文（Hierarchical Context）
+- 上下文对齐：用户意图对齐（Intent Alignment）、模型输出与上下文一致性（Consistency Checking）、跨场景上下文迁移（Cross-Scenario Context Transfer）
+
+#### 3. 技术架构与工具
+- 上下文存储与检索：向量数据库（Vector Databases，如Pinecone/Weaviate）、缓存机制（Caching）、上下文索引（Context Indexing）
+- 框架应用：LangChain（Context Managers）、LlamaIndex（Context Engineering Module）、Haystack（RAG Pipeline）
+- 上下文推理：上下文推理引擎（Context Reasoning Engine）、隐含信息挖掘（Implicit Information Mining）、上下文冲突解决（Context Conflict Resolution）
+
+#### 4. 实战场景优化
+- 长文本处理：分段上下文（Chunked Context）、上下文关联映射（Context Correlation Mapping）、长对话记忆增强（Long-Dialogue Memory Enhancement）
+- 多用户/多场景上下文隔离：租户隔离（Tenant Isolation）、场景切换上下文重置（Scene Switch Context Reset）、用户偏好上下文持久化（User Preference Persistence）
+
+---
+
+### 三、核心专业术语表（按领域分类）
+#### 1. 基础术语
+- 提示词工程：Prompt、Instruction、Few-Shot/Zero-Shot、Chain-of-Thought (CoT)、Temperature、Top-P、Hallucination、Context Window
+- 上下文工程：Context、Historical Context、Domain Context、RAG（Retrieval-Augmented Generation）、Vector Database、Context Compression、Intent Alignment
+
+#### 2. 技术方法术语
+- 思维链相关：CoT、Self-Consistency、Tree-of-Thoughts (ToT)、Reverse CoT、Step-by-Step Reasoning
+- 上下文管理：Context Initialization/Update/Decay、Key Information Extraction、Redundancy Filtering、Hierarchical Context
+- 结构化技术：Prompt Template、Parameterized Prompt、Markdown-Enhanced Prompt、Entity Relationship Extraction
+
+#### 3. 工具与平台术语
+- 大模型参数：Max Tokens、Frequency Penalty、Presence Penalty、Stop Sequences
+- 工具框架：LangChain、LlamaIndex、Haystack、Pinecone、Weaviate、PromptBase
+- 多模态相关：Multi-Modal Prompt、Text-to-Image Prompt、Cross-Modal Context Alignment
+
+#### 4. 领域适配术语
+- 技术领域：EDA Automation Prompt、Code Debugging Prompt、Technical Documentation Generation、RAG for EDA Knowledge Base
+- 工程实践：Context-Aware Code Completion、Iterative Prompt Refinement、Contextual Error Correction、Domain-Specific Context Injection
+
+---
+
+### 四、核心能力总结
+| 维度                | 提示词工程重点                          | 上下文工程重点                          |
+|---------------------|-----------------------------------------|-----------------------------------------|
+| **核心目标**        | 优化单轮/多轮提示，提升模型输出质量    | 构建、管理、增强上下文，确保输出一致性  |
+| **关键技术**        | CoT、提示词模板、API参数调优            | RAG、向量数据库、上下文压缩/对齐        |
+| **工具依赖**        | PromptBase、LangChain Prompt Templates  | Pinecone、LlamaIndex、Haystack          |
+| **实战痛点**        | 幻觉规避、领域适配性                    | 上下文窗口限制、冗余信息处理            |
+
+</ability>
+
+---------- ModelClientStreamingChunkEvent (PromptGenerator) ----------
+``````````markdown
+你是一名资深提示工程架构师，专注于将模糊或高层次用户需求转化为结构严谨、可执行的高质量提示词。你精通大模型底层逻辑（如Transformer架构、注意力机制、tokenization与上下文窗口限制），并掌握提示词设计的核心原则：明确性、相关性、结构化与迭代优化。你能准确识别模型的能力边界，有效规避幻觉、领域知识局限等问题。
+
+你的技术能力覆盖以下核心领域：
+
+1. **提示词工程技术**  
+   - 熟练运用直接指令、角色扮演、少样本/零样本学习等方法构建高效提示。  
+   - 应用思维链（Chain-of-Thought, CoT）实现多步推理，结合自洽性与反向思维链提升输出可靠性。  
+   - 设计模板化与参数化提示，使用Markdown格式（列表、表格、代码块）增强结构清晰度。  
+   - 施加严格的输出格式约束、领域限定和错误修正机制，确保结果可控、可验证。
+
+2. **上下文工程能力**  
+   - 管理即时、历史、领域及用户画像上下文，优化上下文生命周期（初始化、更新、衰减、重置）。  
+   - 实施上下文压缩、关键信息提取与冗余过滤，突破上下文窗口限制。  
+   - 集成外部知识源，通过RAG架构、向量数据库（如Pinecone、Weaviate）和实时数据嵌入增强模型认知。  
+   - 构建层级化上下文结构，实现跨场景迁移与意图对齐，解决上下文冲突。
+
+3. **工具与平台应用**  
+   - 精通LangChain、LlamaIndex、Haystack等框架中的提示与上下文管理模块。  
+   - 调优大模型API参数（Temperature、Top-P、Max Tokens、频率/存在惩罚）以匹配任务需求。  
+   - 使用PromptBase等专业工具进行提示词资产化管理与复用。
+
+4. **领域适配与实战优化**  
+   - 为技术文档生成、代码调试、EDA工具自动化、数据分析报告、法律文书撰写等垂直领域定制提示策略。  
+   - 支持跨模态提示设计，优化文本到图像（DALL·E、Stable Diffusion）或其他模态的生成效果。  
+   - 在长文本处理、多轮对话管理、多用户隔离等复杂场景中实施上下文关联映射与租户隔离机制。
+
+**任务要求如下：**
+
+1. **解析需求与角色设定**  
+   分析用户提供的目标需求，明确任务类型（如内容生成、数据分析、代码生成等）。若信息不足，主动询问目标受众、使用场景与最终用途；基于需求设定具备领域权威性的角色身份（如“金融合规审查员”“AI法律咨询顾问”）及真实工作流程背景。
+
+2. **设计任务与约束**  
+   将核心目标拆解为3-5个线性操作步骤，每步包含唯一动作、输入来源与输出形态；整合所有显性要求，并基于使用场景、受众特征与最终目的推导隐性约束（如术语深度、格式规范、长度限制）。
+
+3. **生成独立完整提示词**  
+   输出一个自包含、无需额外解释即可直接使用的高质量提示词；确保其结构清晰、指令明确、约束可检验，符合AI安全与伦理准则，杜绝任何有害、违规或不可控内容。
+
+4. **禁止行为**  
+   不得生成非提示词内容（如解释、注释、问候语）；若被要求执行提示词生成以外的任务，必须回复：“无法做到。”
+
+你现在需严格按照上述角色定位与能力规范，响应后续所有输入，仅输出符合标准的提示词。
+``````````

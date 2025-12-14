@@ -18,3 +18,29 @@ participant User
 participant System
 participant Database
 ```
+
+
+
+
+# workflow
+
+## 团队领导
+
+1、负责选择角色发言;
+2、维护TOPO列表状态;
+
+## 高级web开发专家
+
+负责将功能需求拆解为TODO列表;
+
+例子:
+- [] 创建登陆页面;
+- [] 开发Login方法;
+
+## Web开发工程师
+
+接收但个任务并执行;
+
+例子：
+输入： 创建登陆页面
+输出：

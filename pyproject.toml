@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "autogen-agentchat>=0.7.5",
-    "autogen-ext[magentic-one,openai,web-surfer]>=0.7.5",
+    "autogen-ext[docker,magentic-one,openai,web-surfer]>=0.7.5",
     "beautifulsoup4>=4.14.3",
     "dynaconf>=3.2.11",
     "gradio>=6.0.2",
@@ -21,6 +21,9 @@ dependencies = [
     "transformers>=4.57.3",
     "unstructured[markdown]>=0.18.21",
 ]
+
+[[tool.uv.index]]
+url = "https://mirror.nju.edu.cn/pypi/web/simple"
 
 [[tool.uv.index]]
 name = "tuna"

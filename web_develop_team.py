@@ -14,8 +14,11 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_agentchat.conditions import TextMentionTermination
 
 # from autogen_ext.tools.mcp import McpWorkbench, StdioServerParams
-from autogen_ext.agents.web_surfer import MultimodalWebSurfer
-from autogen_ext.agents.file_surfer import FileSurfer
+from autogen_ext.code_executors import LocalCommandLineCodeExecutor
+from autogen_ext.code_executors.docker import DockerCommandLineCodeExecutor
+from autogen_core.code_executor import CodeBlock
+from autogen_core import CancellationToken
+
 
 try:
     # Add the parent directory to the path so we can import conf
@@ -28,14 +31,7 @@ except ImportError:
     raise
 
 
-# For this example, we use a fake weather tool for demonstration purposes.
-async def get_weather(city: str) -> str:
-    """Get the weather for a given city."""
-    return f"The weather in {city} is 73 degrees and Sunny."
-
-    # 根据DeepSeek模型的实际能力调整ModelInfo参数
-
-
+# 根据DeepSeek模型的实际能力调整ModelInfo参数
 deepseek_model_info = ModelInfo(
     vision=False,
     function_calling=True,  # DeepSeek支持函数调用
@@ -60,9 +56,24 @@ volce_model_info = ModelInfo(
     structured_output=True,
 )
 
-deepseek_model_client = OpenAIChatCompletionClient(
+deepseek_chat_model_client = OpenAIChatCompletionClient(
     api_key=settings.deepseek.api_key,
     model="deepseek-chat",
+    base_url=settings.deepseek.base_url,
+    model_info=deepseek_model_info,
+)
+
+deepseek_code_model_client = OpenAIChatCompletionClient(
+    api_key=settings.deepseek.api_key,
+    model="deepseek-chat",
+    base_url=settings.deepseek.base_url,
+    model_info=deepseek_model_info,
+    temperature=0.0,
+)
+
+deepseek_reasoner_model_client = OpenAIChatCompletionClient(
+    api_key=settings.deepseek.api_key,
+    model="deepseek-reasoner",
     base_url=settings.deepseek.base_url,
     model_info=deepseek_model_info,
 )
@@ -76,25 +87,30 @@ aliyun_model_client = OpenAIChatCompletionClient(
 
 doubao_model_client = OpenAIChatCompletionClient(
     api_key=settings.volces.api_key,
+    model="doubao-seed-1-6-251015",
+    base_url=settings.volces.base_url,
+    model_info=volce_model_info,
+)
+
+doubao_thinking_model_client = OpenAIChatCompletionClient(
+    api_key=settings.volces.api_key,
     model="doubao-seed-1-6-thinking-250715",
     base_url=settings.volces.base_url,
     model_info=volce_model_info,
 )
 
+doubao_code_model_client = OpenAIChatCompletionClient(
+    api_key=settings.volces.api_key,
+    model="doubao-seed-code-preview-251028",
+    base_url=settings.volces.base_url,
+    model_info=volce_model_info,
+)
+
+
 user = UserProxyAgent(
     name="user",
     description="The user who requests the feature.",
 )
-
-# web浏览器
-web_surfer = MultimodalWebSurfer(
-        "WebSurfer",
-        model_client=doubao_model_client,
-    
-)
-
-# 文件浏览器
-file_surfer = FileSurfer(name="FileSurfer", model_client=doubao_model_client)
 
 web_developer_prompt = """
 # 角色定位  
@@ -137,7 +153,7 @@ web_developer_prompt = """
 web_developer = AssistantAgent(
     name="WebDeveloper",
     description="Web开发专家，负责基于用户需求，生成符合要求的前端原型代码。",
-    model_client=deepseek_model_client,
+    model_client=doubao_code_model_client,
     system_message=web_developer_prompt,
     reflect_on_tool_use=True,
     model_client_stream=True,
@@ -212,7 +228,7 @@ echo '{ "compilerOptions": { "target": "ESNext", "lib": ["DOM", "DOM.Iterable", 
 tool_export = AssistantAgent(
     name="ToolExport",
     description="Web开发工程化工具链专家",
-    model_client=deepseek_model_client,
+    model_client=doubao_code_model_client,
     system_message=web_developer_prompt,
     reflect_on_tool_use=True,
     model_client_stream=True,
@@ -282,18 +298,32 @@ web开发工程师 或 UserProxyAgent
 
 # 创建团队
 develop_team = SelectorGroupChat(
-    participants=[web_developer, user, web_surfer, file_surfer],
-    model_client=deepseek_model_client,
+    participants=[tool_export, user],
+    model_client=deepseek_chat_model_client,
     termination_condition=TextMentionTermination("good job"),
     selector_prompt=selector_prompt,
     max_turns=50,
-    allow_repeated_speaker=False
+    allow_repeated_speaker=False,
 )
+
+work_dir = "/home/qinhuajun/Autogen_projects"
+
+
+async def run_cmd(cmd: str):
+    local_executor = LocalCommandLineCodeExecutor(work_dir=work_dir)
+    result =  await local_executor.execute_code_blocks(
+        code_blocks=[
+            CodeBlock(language="bash", code=cmd),
+        ],
+        cancellation_token=CancellationToken(),
+    )
+    
+    return result
 
 
 async def main() -> None:
-    await Console(develop_team.run_stream(task=""))
+    await Console(develop_team.run_stream(task="生成vite+react项目"))
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(run_cmd("pwd"))
